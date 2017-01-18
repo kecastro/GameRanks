@@ -32,7 +32,7 @@
               <tr>
                 <th>Juego</th>
                 <th>Consola</th>
-                <th>Lanzamiento</th>
+                <th class="mobile-table">Lanzamiento</th>
                 <th style="text-align: center">Likes</th>
               </tr>
               </thead>
@@ -41,7 +41,7 @@
               <tr>
                 <td><a href="{% url 'games:game_view' game.id %}">{{ game.name }}</a></td>
                 <td>{{ game.console.name }}</td>
-                <td>{{ game.year }}</td>
+                <td class="mobile-table">{{ game.year }}</td>
                 <td style="text-align: center">{{ game.votes }}</td>
               </tr>
               {% endfor %}

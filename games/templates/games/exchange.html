@@ -11,22 +11,22 @@
         </div>
     {% else %}
         <div class="jumbotron col-md-8 col-md-offset-2">
-            <div class="table-responsive table-in-jumbo">
+            <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center">Yo</th>
-                            <th class="text-center">Tengo</th>
+                            <th class="text-center mobile-table-big">Yo</th>
+                            <th class="text-center mobile-table-big">Tengo</th>
                             <th class="text-center">Usuario</th>
                             <th class="text-center">Tiene</th>
-                            <th class="text-center">Generar Intercambio</th>
+                            <th class="text-center">Generar</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for key, value in response.items %}
                         <tr>
-                            <td>{{ value.creator.username }}</td>
-                            <td>{{ value.creatorGame}}</td>
+                            <td class="mobile-table-big">{{ value.creator.username }}</td>
+                            <td class="mobile-table-big">{{ value.creatorGame}}</td>
                             <td>{{ value.guest.username }}</td>
                             <td>{{ value.guestGame}}</td>
                             <td>

@@ -54,7 +54,7 @@
             {% if request.user.id == exchange.guest.user.id %}
                 {% if  exchange.exchange_state == 0 %}
                     <div class="col-md-6">
-                        <form method="post">
+                        <form style="padding-bottom: 10px" method="post">
                          {% csrf_token %}
                             <input type="hidden" name="state" value="1">
                             <button type="submit" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>

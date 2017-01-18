@@ -43,8 +43,8 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Yo</th>
-                            <th>Tengo</th>
+                            <th class="mobile-table-big">Yo</th>
+                            <th class="mobile-table-big">Tengo</th>
                             <th>Usuario</th>
                             <th>Tiene</th>
                             <th>Estado</th>
@@ -55,8 +55,8 @@
                             <tbody>
                             {% if x.exchange_state == 0 %}
                                 <tr class="warning">
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
                                     <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
@@ -64,8 +64,8 @@
                                 </tr>
                             {% elif x.exchange_state == 1 %}
                                 <tr class="success">
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
                                     <td><i class="fa fa-check"></i></td>
@@ -73,8 +73,8 @@
                                 </tr>
                             {% else %}
                                 <tr class="danger">
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
                                     <td><i class="fa fa-times" aria-hidden="true"></i></td>
@@ -97,8 +97,8 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Yo</th>
-                            <th>Tengo</th>
+                            <th class="mobile-table-big">Yo</th>
+                            <th class="mobile-table-big">Tengo</th>
                             <th>Usuario</th>
                             <th>Tiene</th>
                             <th>Estado</th>
@@ -111,8 +111,8 @@
                                 <tr class="warning">
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
                                     <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
                                 </tr>
@@ -120,8 +120,8 @@
                                 <tr class="success">
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td><i class="fa fa-check" aria-hidden="true"></i></td>
                                     <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
                                 </tr>
@@ -129,8 +129,8 @@
                                 <tr class="danger">
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
-                                    <td>{{ x.creator }}</td>
-                                    <td>{{ x.game_creator }}</td>
+                                    <td class="mobile-table-big">{{ x.creator }}</td>
+                                    <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td><i class="fa fa-times" aria-hidden="true"></i></td>
                                     <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
                                 </tr>

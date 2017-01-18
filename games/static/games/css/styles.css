@@ -71,16 +71,10 @@ ul
 }
 
 
-/* A the table won't take the whole width of the jumbotron */
-.table-in-jumbo{
-    padding-left: 50px;
-    padding-right: 50px;
-    text-align: center;
-}
 
 /* Adjustment to the multiple select provided by the Chosen Plugin */
 .custom-multi-select{
-    width: 75%;
+    width: 600px;
 
 }
 
@@ -104,5 +98,46 @@ ul
     }
     .navbar-header {
         float:none;
+    }
+}
+
+
+/* Hide column if device is too small */
+@media (max-width: 1000px){
+   .right-nav{
+        float: left;
+    }
+}
+
+/* Multiselect responsive */
+@media (min-width: 1200px) and (max-width: 1800px) {
+    .custom-multi-select{
+    width: 400px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 1200px) {
+    .custom-multi-select{
+    width: 250px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .custom-multi-select{
+    width: 150px;
+    }
+}
+
+/* Hide column if device is too small */
+@media (max-width: 375px){
+   .mobile-table{
+        display: none;
+    }
+}
+
+@media (max-width: 500px){
+   .mobile-table-big{
+        display: none;
     }
 }
