@@ -1,0 +1,11 @@
+{% extends 'games/base.html' %}
+{% block title %}Usuario - {{ other_user.first_name }}{% endblock %}
+
+{% block body %}
+
+    <p>Hola {{ other_user.first_name }}</p>
+    <p>Gamertag: {{ other_user.useraccount.gamer_id }}</p>
+
+{% endblock %}
+
+

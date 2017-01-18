@@ -1,0 +1,108 @@
+/* Change the background color of the webpage */
+body {
+    background-color: #f7faff;
+}
+
+/* remove the bullet points from li objects */
+ul
+{
+    list-style-type: none;
+}
+
+/* Move elements on the nav var to the rigth Ex:login, register */
+.right-nav{
+    float: right;
+}
+
+/*  Design for the cover image displayed on each games page */
+.game_art{
+    max-width: 80%;
+    max-height: 80%;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+/* Design for the cover image of a game in the exchange detail page */
+.game_cover_exchange{
+    max-width: 40%;
+    max-height: 40%;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+/* Design for the cover image of a game in the search bar */
+.game_cover_search{
+    max-width: 10%;
+    max-height: 10%;
+    margin: auto;
+}
+
+/* User profile picture in the exchange detail page */
+.thumbnail-sm {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+
+/* Changes to the user picture */
+.thumbnail {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+.thumbnail img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+.thumbnail img.portrait {
+  width: 100%;
+  height: auto;
+}
+
+
+/* A the table won't take the whole width of the jumbotron */
+.table-in-jumbo{
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: center;
+}
+
+/* Adjustment to the multiple select provided by the Chosen Plugin */
+.custom-multi-select{
+    width: 75%;
+
+}
+
+
+/* Fix the rigth elements of the nav bar for a certain browser resolution*/
+@media (max-width: 1000px){
+   .right-nav{
+        float: left;
+    }
+}
+
+@media (max-width: 950px) {
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+    .navbar-collapse.collapse.in {
+        display: block !important;
+    }
+    .navbar-header .collapse, .navbar-toggle {
+        display:block !important;
+    }
+    .navbar-header {
+        float:none;
+    }
+}

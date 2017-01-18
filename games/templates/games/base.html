@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+    {% load staticfiles %}
+    <head>
+        <title>{% block title %}Game Ranks{% endblock %}</title>
+
+        <link rel="shortcut icon" href="{% static "games/img/favicon.png" %}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="{% static "games/css/styles.css" %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        {% block extra_head %}{% endblock %}
+    </head>
+
+    <body>
+          <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="{% url 'games:index' %}">
+                  <i class="fa fa-gamepad" aria-hidden="true"></i> Game Ranks
+              </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li><a href="{% url 'games:index' %}">
+                    <i class="fa fa-home" aria-hidden="true"></i> Inicio </a>
+                </li>
+                <li><a href="{% url 'games:all_games' %}">
+                    <i class="fa fa-cubes" aria-hidden="true"></i> Juegos</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'games:trade' %}">
+                        <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
+                    </li>
+                {% else %}
+                    <li><a href="{% url "games:register" %}">
+                        <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
+                    </li>
+                {% endif %}
+
+              </ul>
+                <div class="col-sm-3 col-md-3">
+                    <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        {% csrf_token %}
+                        <input id="search-input" type="text" class="form-control" >
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                    </form>
+                </div>
+              <ul class="nav navbar-nav right-nav">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'games:me'%}"><i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'games:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar sesión</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'games:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Iniciar sesión</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'games:register' %}"><i class="fa fa-id-card-o" aria-hidden="true"></i> Registrarse</a>
+                    </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+		 <div class="row">
+             <div id="main-results-search" class="col-md-6 col-md-offset-3">
+
+             </div>
+         </div>
+
+        {% block body %}{% endblock %}
+
+    </body>
+    <footer>
+        <script type="text/javascript" src="{% static "games/js/script.js" %}"></script>
+        {% block extra_js %}{% endblock %}
+    </footer>
+
+</html>

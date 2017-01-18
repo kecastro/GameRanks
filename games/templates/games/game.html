@@ -1,0 +1,59 @@
+{% extends 'games/base.html' %}
+{% block title %}Juego - {{ game.name }}{% endblock %}
+
+{% block body %}
+{% load staticfiles %}
+<div>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="jumbotron" style="text-align: center">
+            <a href="{% url 'games:all_games' %}" style="float: left; padding-left: 40px"><i class="fa fa-chevron-left"
+                                                                                             aria-hidden="true"></i></a>
+
+            <h2 style="text-align: center"></h2>
+            {% if game.cover == "None" %}
+                <img class="game_art img-responsive img-rounded" src="{% static 'games/img/temp_cover.png' %}">
+            {% else %}
+                <img class="game_art img-responsive img-rounded" src="{{ game.cover }}">
+            {% endif %}
+            <p><b>Lanzamiento: </b>{{ game.year }}</p>
+            {% if game.console.name == "Xbox One" or game.console.name == "Xbox 360" %}
+                <p><b>Consola: </b>{{ game.console }} <i class="ionicons ion-xbox"></i></p>
+            {% else %}
+                <p><b>Consola: </b>{{ game.console }} <i class="ionicons ion-playstation"></i></p>
+            {% endif %}
+
+            <p>
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'games:vote' game.id user.id %}"><i class="fa fa-thumbs-o-up"
+                                                                        aria-hidden="true"></i></a> : {{ game.votes }}
+                {% else %}
+                    <a href="{% url "games:register" %}"><i
+                            class="fa fa-thumbs-o-up" aria-hidden="true"></i></a> : {{ game.votes }}
+                {% endif %}
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "error" %}
+                        <div class="container">
+                            <div class="col-md-6 col-md-offset-3  alert alert-danger">
+                                <strong>Error!</strong> {{ message }}
+                            </div>
+                        </div>
+                    {% elif message.tags == "success" %}
+                        <div class="container">
+                            <div class=" col-md-6 col-md-offset-3 alert alert-success">
+                                <strong>Exito!</strong> {{ message }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

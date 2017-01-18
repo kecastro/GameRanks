@@ -1,0 +1,54 @@
+{% extends 'games/base.html' %}
+{% block title %}Juegos{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-10  col-md-offset-1">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <div class="panel-title">
+                <h4 style="display: inline">
+                    Juegos <i class="fa fa-trophy" aria-hidden="true"></i>
+                </h4>
+                <div style="float: right">
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-arrow-left"></i></a>
+                    {% else %}
+                      <a class="disabled"><span><i class="fa fa-arrow-left"></i></span></a>
+                    {% endif %}
+                    Pagina: {{ page_obj.number }}
+                    {% if page_obj.has_next %}
+                      <a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-arrow-right"></i></a>
+                    {% else %}
+                      <a class="disabled"><span><i class="fa fa-arrow-right"></i></span></a>
+                    {% endif %}
+                {% endif %}
+                </div>
+            </div>
+          </div>
+          <table class="table table-striped table-hover ">
+              <thead>
+              <tr>
+                <th>Juego</th>
+                <th>Consola</th>
+                <th>Lanzamiento</th>
+                <th style="text-align: center">Likes</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for game in  all_games %}
+              <tr>
+                <td><a href="{% url 'games:game_view' game.id %}">{{ game.name }}</a></td>
+                <td>{{ game.console.name }}</td>
+                <td>{{ game.year }}</td>
+                <td style="text-align: center">{{ game.votes }}</td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+{% endblock %}
+

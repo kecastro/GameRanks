@@ -1,0 +1,1 @@
+web: gunicorn P01_GameRanks.wsgi --log-file -

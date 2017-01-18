@@ -1,0 +1,158 @@
+{% extends 'games/base.html' %}
+{% block title %}Mi perfil{% endblock %}
+
+{% block body %}
+    {% load staticfiles %}
+    {% if user.is_authenticated %}
+        <div class="col-sm-12">
+            <div class="col-sm-4">
+                <div style="text-align: center" class="jumbotron">
+                    {% if me.useraccount.picture == "None" %}
+                        <img class="thumbnail center-block" src="{% static 'games/img/default-user.png' %}">
+                    {% else %}
+                        <img class="thumbnail center-block" src="{{ me.useraccount.picture }}">
+                    {% endif %}
+                    <h3>{{ me.first_name }}</h3>
+                    <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
+                    <a href="{% url "games:generate_exchange" %}" class="btn btn-default">Buscar intercambio <i
+                            class="fa fa-search"></i></a>
+                    <h5><a href="{% url 'games:trade' %}">Mis juegos</a></h5>
+                    {% for game in me.useraccount.games_owned.all %}
+                        <p style="font-size: 120%"><a style="color:black;"
+                                                      href="{% url 'games:game_view' game.id %}">{{ game.name }}
+                            - {{ game.console }}</a></p>
+                    {% endfor %}
+                    <h5><a href="{% url 'games:trade' %}">Juegos que busco</a></h5>
+                    {% for game in me.useraccount.games_wanted.all %}
+                        <p style="font-size: 120%"><a style="color:black;"
+                                                      href="{% url 'games:game_view' game.id %}">{{ game.name }}
+                            - {{ game.console }}</a></p>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Intercambios
+                    </div>
+                    <div class="panel-body">
+                        <p>Informacion de todos los intercambios asociados a su cuenta (<b>Generados
+                            por {{ me.username }}</b>)</p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Yo</th>
+                            <th>Tengo</th>
+                            <th>Usuario</th>
+                            <th>Tiene</th>
+                            <th>Estado</th>
+                            <th>Ver</th>
+                        </tr>
+                        </thead>
+                        {% for x in me.useraccount.exchange_creator.all %}
+                            <tbody>
+                            {% if x.exchange_state == 0 %}
+                                <tr class="warning">
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% elif x.exchange_state == 1 %}
+                                <tr class="success">
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td><i class="fa fa-check"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% else %}
+                                <tr class="danger">
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Intercambios
+                    </div>
+                    <div class="panel-body">
+                        <p>Informacion de todos los intercambios asociados a su cuenta (<b>Generados por otros
+                            usuarios</b>)</p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Yo</th>
+                            <th>Tengo</th>
+                            <th>Usuario</th>
+                            <th>Tiene</th>
+                            <th>Estado</th>
+                            <th>Ver</th>
+                        </tr>
+                        </thead>
+                        {% for x in me.useraccount.exchange_guest.all %}
+                            <tbody>
+                            {% if x.exchange_state == 0 %}
+                                <tr class="warning">
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% elif x.exchange_state == 1 %}
+                                <tr class="success">
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td><i class="fa fa-check" aria-hidden="true"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% else %}
+                                <tr class="danger">
+                                    <td>{{ x.guest }}</td>
+                                    <td>{{ x.game_guest }}</td>
+                                    <td>{{ x.creator }}</td>
+                                    <td>{{ x.game_creator }}</td>
+                                    <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                                    <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div style="text-align: center" class="col-md-6 col-md-offset-3">
+            <div class="jumbotron">
+                <p>Para poder acceder a este contenido es necesario registrarse</p>
+                <a class="btn btn-default" href="{% url 'games:register' %}"><i class="fa fa-id-card-o"></i> Registrarse</a>
+
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+

@@ -1,0 +1,83 @@
+{% extends 'games/base.html' %}
+{% block title %}Detalle intercambio{% endblock %}
+
+{% block body %}
+{% load staticfiles %}
+
+{% if error_message %}
+    <div style="text-align: center" class=" col-md-8 col-md-offset-2 alert alert-danger">
+            {{ error_message }}
+    </div>
+{% else %}
+
+    <div style="text-align: center  " class=" col-md-8 col-md-offset-2 jumbotron">
+        <h2>Informacion del cambio:</h2>
+        <div class="col-md-6">
+            {% if exchange.creator.picture == "None" %}
+                <img class="thumbnail-sm center-block" src="{% static 'games/img/default-user.png' %}">
+            {% else %}
+                <img class="thumbnail-sm center-block" src="{{ exchange.creator.picture }}">
+            {% endif %}
+            <p>{{ exchange.creator }}</p>
+            <p><a href="{% url 'games:game_view' exchange.game_creator.id %}">{{ exchange.game_creator }}</a></p>
+            {% if exchange.game_creator.cover == "None" %}
+                <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
+            {% else %}
+                <img class="game_cover_exchange center-block" src="{{ exchange.game_creator.cover }}">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            {% if exchange.guest.picture == "None" %}
+                <img class="thumbnail-sm center-block" src="{% static 'games/img/default-user.png' %}">
+            {% else %}
+                <img class="thumbnail-sm center-block" src="{{ exchange.guest.picture }}">
+            {% endif %}
+            <p>{{ exchange.guest}}</p>
+            <p><a href="{% url 'games:game_view' exchange.game_guest.id %}">{{ exchange.game_guest }}</a></p>
+            {% if exchange.game_guest.cover == "None" %}
+                <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
+            {% else %}
+                <img class="game_cover_exchange center-block" src="{{ exchange.game_guest.cover }}">
+            {% endif %}
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+            <p>
+            <b>Estatus:</b>
+            {% if exchange.exchange_state == 0 %}
+                En proceso <i class="fa fa-hourglass-half"></i>
+            {% elif exchange.exchange_state == 1 %}
+                Completado <i class="fa fa-check"></i>
+            {% else %}
+                No Completado <i class="fa fa-times"></i>
+            {% endif %}
+            </p>
+            {% if request.user.id == exchange.guest.user.id %}
+                {% if  exchange.exchange_state == 0 %}
+                    <div class="col-md-6">
+                        <form method="post">
+                         {% csrf_token %}
+                            <input type="hidden" name="state" value="1">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                         <form method="post">
+                        {% csrf_token %}
+                            <input type="hidden" name="state" value="2">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                {% endif %}
+                {% if message %}
+                    <div style="text-align: center" class=" col-md-8 col-md-offset-2 alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock %}
+

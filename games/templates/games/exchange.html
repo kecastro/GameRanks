@@ -1,0 +1,50 @@
+{% extends 'games/base.html' %}
+{% block title %}Intercambios{% endblock %}
+
+{% block body %}
+    <h3 style="text-align: center">Posibles intercambios</h3>
+
+    {% if message %}
+        <div style="text-align: center" class=" col-md-6 col-md-offset-3 alert alert-warning">
+            {{ message }}
+            <a href="{% url 'games:me' %}"><i style="float: right" class="fa fa-arrow-circle-left"></i></a>
+        </div>
+    {% else %}
+        <div class="jumbotron col-md-8 col-md-offset-2">
+            <div class="table-responsive table-in-jumbo">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Yo</th>
+                            <th class="text-center">Tengo</th>
+                            <th class="text-center">Usuario</th>
+                            <th class="text-center">Tiene</th>
+                            <th class="text-center">Generar Intercambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, value in response.items %}
+                        <tr>
+                            <td>{{ value.creator.username }}</td>
+                            <td>{{ value.creatorGame}}</td>
+                            <td>{{ value.guest.username }}</td>
+                            <td>{{ value.guestGame}}</td>
+                            <td>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="creator" value="{{ value.creator.id }}">
+                                    <input type="hidden" name="guest" value="{{ value.guest.id }}">
+                                    <input type="hidden" name="creator_game" value="{{ value.creatorGame.id }}">
+                                    <input type="hidden" name="guest_game" value="{{ value.guestGame.id }}">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                     {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+

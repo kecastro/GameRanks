@@ -1,0 +1,79 @@
+from django import forms
+from django.contrib.auth.models import User
+from .models import *
+from django.core.validators import RegexValidator
+
+username_validator = RegexValidator(r'^[0-9a-z]*$',
+                                    "Solo letras y numeros (sin espacios ni mayusculas)")
+first_name_validator = RegexValidator(r'^[0-9a-zA-Z]*$',
+                                      "Ingrese un nombre valido (solo primer nombre)")
+last_name_validator = RegexValidator(r'^[0-9a-zA-Z]*$',
+                                     "Ingrese un apellido valido (solo primer apellido)")
+
+
+class UserForm(forms.ModelForm):
+    username = forms.CharField(validators=[username_validator], max_length=20,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(validators=[first_name_validator], max_length=20, required=True,
+                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(validators=[last_name_validator], label='Apellido', max_length=20, required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirmar contraseña',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email and User.objects.filter(email=email).exclude(username=username).count():
+            raise forms.ValidationError(u'Ya existe un usuario con este correo')
+        return email
+
+    def clean_password2(self):
+        password = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+
+        if password:
+            if len(password) < 6:
+                raise forms.ValidationError("La contraseña debe tener una longitud minima de 6 caracteres")
+        if not password2:
+            raise forms.ValidationError("Debe confirmar la contraseña")
+        if password != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden")
+        return password2
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'password']
+
+
+class UserProfileForm(forms.ModelForm):
+    gamer_id = forms.CharField(label='Gamertag', max_length=20, required=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = UserAccount
+        fields = ['gamer_id']
+
+
+class OwnedGamesForm(forms.ModelForm):
+    CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
+               Game.objects.all().order_by('name')]
+    games_owned = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
+        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select custom-multi-select'}))
+
+    class Meta:
+        model = UserAccount
+        fields = ['games_owned']
+
+
+class WantedGamesForm(forms.ModelForm):
+    CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
+               Game.objects.all().order_by('name')]
+    games_wanted = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
+        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select custom-multi-select'}))
+
+    class Meta:
+        model = UserAccount
+        fields = ['games_wanted']
