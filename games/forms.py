@@ -61,7 +61,7 @@ class OwnedGamesForm(forms.ModelForm):
     CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
                Game.objects.all().order_by('name')]
     games_owned = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select custom-multi-select'}))
+        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select'}))
 
     class Meta:
         model = UserAccount
@@ -72,7 +72,7 @@ class WantedGamesForm(forms.ModelForm):
     CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
                Game.objects.all().order_by('name')]
     games_wanted = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select custom-multi-select'}))
+        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select'}))
 
     class Meta:
         model = UserAccount

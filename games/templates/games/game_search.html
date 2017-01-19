@@ -1,11 +1,11 @@
 <ul class="list-group" id="results-search">
     {% for g in games %}
         {% if g.console.name == "Xbox One" or g.console.name == "Xbox 360" %}
-            <li class="list-group-item"><a href="{% url 'games:game_view' g.id %}">
+            <li class="list-group-item"><a style="color:#02194f;" href="{% url 'games:game_view' g.id %}">
                 {{ g }} <i style="float: right" class="ionicons ion-xbox"></i></a>
             </li>
         {% else %}
-            <li class="list-group-item"><a href="{% url 'games:game_view' g.id %}">
+            <li class="list-group-item"><a style="color:#02194f;" href="{% url 'games:game_view' g.id %}">
             {{ g }} <i style="float: right" class="ionicons ion-playstation"></i></a>
         </li>
         {% endif %}

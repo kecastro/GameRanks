@@ -6,7 +6,7 @@
     {% if user.is_authenticated %}
         <div class="col-sm-12">
             <div class="col-sm-4">
-                <div style="text-align: center" class="jumbotron">
+                <div style="text-align: center;" class="jumbotron">
                     {% if me.useraccount.picture == "None" %}
                         <img class="thumbnail center-block" src="{% static 'games/img/default-user.png' %}">
                     {% else %}
@@ -16,13 +16,13 @@
                     <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
                     <a href="{% url "games:generate_exchange" %}" class="btn btn-default">Buscar intercambio <i
                             class="fa fa-search"></i></a>
-                    <h5><a href="{% url 'games:trade' %}">Mis juegos</a></h5>
+                    <h5><a style="color:#02194f;" href="{% url 'games:trade' %}">Mis juegos</a></h5>
                     {% for game in me.useraccount.games_owned.all %}
                         <p style="font-size: 120%"><a style="color:black;"
                                                       href="{% url 'games:game_view' game.id %}">{{ game.name }}
                             - {{ game.console }}</a></p>
                     {% endfor %}
-                    <h5><a href="{% url 'games:trade' %}">Juegos que busco</a></h5>
+                    <h5><a style="color:#02194f;" href="{% url 'games:trade' %}">Juegos que busco</a></h5>
                     {% for game in me.useraccount.games_wanted.all %}
                         <p style="font-size: 120%"><a style="color:black;"
                                                       href="{% url 'games:game_view' game.id %}">{{ game.name }}

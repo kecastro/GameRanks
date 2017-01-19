@@ -4,11 +4,11 @@
 {% block body %}
 
     <div class="col-md-10  col-md-offset-1">
-        <div class="panel panel-success">
-          <div class="panel-heading">
+        <div class="panel ">
+          <div class="panel-heading ">
             <div class="panel-title">
                 <h4 style="display: inline">
-                    Juegos <i class="fa fa-trophy" aria-hidden="true"></i>
+                    <i class="fa fa-trophy" aria-hidden="true"></i>
                 </h4>
                 <div style="float: right">
                 {% if is_paginated %}
@@ -27,7 +27,7 @@
                 </div>
             </div>
           </div>
-          <table class="table table-striped table-hover ">
+          <table class="table table-hover">
               <thead>
               <tr>
                 <th>Juego</th>
@@ -38,8 +38,8 @@
               </thead>
               <tbody>
               {% for game in  all_games %}
-              <tr>
-                <td><a href="{% url 'games:game_view' game.id %}">{{ game.name }}</a></td>
+              <tr class="active">
+                <td><a style="color:#25384f;" href="{% url 'games:game_view' game.id %}">{{ game.name }}</a></td>
                 <td>{{ game.console.name }}</td>
                 <td class="mobile-table">{{ game.year }}</td>
                 <td style="text-align: center">{{ game.votes }}</td>
