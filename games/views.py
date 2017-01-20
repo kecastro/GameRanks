@@ -210,3 +210,10 @@ def search_game(request):
         games = Game.objects.filter(Q(name__icontains=query))[:10]
         return render(request, 'games/game_search.html', {'games': games})
     return render(request, 'games/game_search.html')
+
+def search_user(request):
+    query = request.GET.get('query')
+    if query is not None and query != '' and request.is_ajax():
+        usernames = User.objects.filter(Q(username__icontains=query))[:10]
+        return render(request, 'games/user_search.html', {'users':usernames})
+    return render(request, 'games/user_search.html')

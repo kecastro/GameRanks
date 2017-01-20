@@ -1,0 +1,7 @@
+<ul class="list-group" id="results-search-user">
+    {% for u in users %}
+        <li class="list-group-item"><a style="color:#02194f;" href="{% url 'games:users_page' u.username %}">
+            <i class="fa fa-user"> Usuario : {{ u.username }}</i></a>
+        </li>
+    {% endfor %}
+</ul>

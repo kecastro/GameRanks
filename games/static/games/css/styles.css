@@ -1,4 +1,4 @@
-/* Change the background color of the webpage */
+/* Full screen background */
 
 body {
   background: url("../img/bg-alt.jpg") no-repeat center center fixed;
@@ -155,5 +155,17 @@ ul
 @media (max-width: 500px){
    .mobile-table-big{
         display: none;
+    }
+}
+
+@media (min-width: 300px) and (max-width: 500px){
+   .mobile-multiselect{
+        width: 280px;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 750px){
+   .mobile-multiselect{
+        width: 400px;
     }
 }

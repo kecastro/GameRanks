@@ -4,8 +4,8 @@
 {% block body %}
     {% load staticfiles %}
     {% if user.is_authenticated %}
-        <div class="col-sm-12">
-            <div class="col-sm-4">
+        <div class="col-md-12">
+            <div class="col-md-4">
                 <div style="text-align: center;" class="jumbotron">
                     {% if me.useraccount.picture == "None" %}
                         <img class="thumbnail center-block" src="{% static 'games/img/default-user.png' %}">
@@ -13,9 +13,18 @@
                         <img class="thumbnail center-block" src="{{ me.useraccount.picture }}">
                     {% endif %}
                     <h3>{{ me.first_name }}</h3>
+
                     <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
-                    <a href="{% url "games:generate_exchange" %}" class="btn btn-default">Buscar intercambio <i
-                            class="fa fa-search"></i></a>
+
+                    <form class="navbar-form" role="search">
+                        <div class="input-group">
+                            {% csrf_token %}
+                            <input id="search-input-user" type="text" class="form-control"
+                                   placeholder="Buscar usuarios">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        </div>
+                    </form>
+
                     <h5><a style="color:#02194f;" href="{% url 'games:trade' %}">Mis juegos</a></h5>
                     {% for game in me.useraccount.games_owned.all %}
                         <p style="font-size: 120%"><a style="color:black;"
@@ -31,10 +40,12 @@
 
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-md-8">
+                <div id="main-results-search-user"></div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Intercambios
+                        Intercambios <a style="color:#02194f; float: right" href="{% url "games:generate_exchange" %}">Buscar
+                        intercambio <i class="fa fa-refresh"></i></a>
                     </div>
                     <div class="panel-body">
                         <p>Informacion de todos los intercambios asociados a su cuenta (<b>Generados
@@ -88,7 +99,8 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Intercambios
+                        Intercambios <a style="color:#02194f; float: right" href="{% url "games:generate_exchange" %}">Buscar
+                        intercambio <i class="fa fa-refresh"></i></a>
                     </div>
                     <div class="panel-body">
                         <p>Informacion de todos los intercambios asociados a su cuenta (<b>Generados por otros
@@ -152,6 +164,9 @@
         </div>
     {% endif %}
 
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static "games/js/user_search.js" %}"></script>
 {% endblock %}
 
 
