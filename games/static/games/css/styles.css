@@ -67,11 +67,14 @@ ul
     padding-bottom: 20px;
 }
 
-/* Design for the cover image of a game in the search bar */
-.game_cover_search{
-    max-width: 10%;
-    max-height: 10%;
-    margin: auto;
+/* Design for the cover image of a game in the user page */
+.game_cover_user{
+    width: 200px;
+    height: 250px;
+    padding-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* User profile picture in the exchange detail page */
@@ -107,7 +110,7 @@ ul
   height: auto;
 }
 
-
+/*Better look for chosen container */
 .chosen-container-multi .chosen-choices
 {
     border-radius: 5px;
@@ -167,5 +170,16 @@ ul
 @media (min-width: 500px) and (max-width: 750px){
    .mobile-multiselect{
         width: 400px;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1200px) {
+    .game_cover_user {
+        width: 150px;
+        height: 200px;
+        padding-bottom: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 }

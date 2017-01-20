@@ -6,9 +6,6 @@
 <div>
     <div class="col-md-6 col-md-offset-3">
         <div class="jumbotron" style="text-align: center">
-            <a href="{% url 'games:all_games' %}" style="float: left; padding-left: 40px"><i class="fa fa-chevron-left"
-                                                                                             aria-hidden="true"></i></a>
-
             <h2 style="text-align: center"></h2>
             {% if game.cover == "None" %}
                 <img class="game_art img-responsive img-rounded" src="{% static 'games/img/temp_cover.png' %}">
