@@ -23,13 +23,6 @@ class UserForm(forms.ModelForm):
     password2 = forms.CharField(label='Confirmar contraseña',
                                 widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        username = self.cleaned_data.get('username')
-        if email and User.objects.filter(email=email).exclude(username=username).count():
-            raise forms.ValidationError(u'Ya existe un usuario con este correo')
-        return email
-
     def clean_password2(self):
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
@@ -49,12 +42,14 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    picture = forms.CharField(label='Foto de perfil', max_length=250, required=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
     gamer_id = forms.CharField(label='Gamertag', max_length=20, required=False,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = UserAccount
-        fields = ['gamer_id']
+        fields = ['gamer_id', 'picture']
 
 
 class OwnedGamesForm(forms.ModelForm):

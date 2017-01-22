@@ -7,6 +7,7 @@
         <div class="col-md-12">
             <div class="col-md-4">
                 <div style="text-align: center;" class="jumbotron">
+                    <a href="{% url 'games:edit_me' %}"><i class="fa fa-edit"></i></a>
                     {% if me.useraccount.picture == "None" %}
                         <img class="thumbnail center-block" src="{% static 'games/img/default-user.png' %}">
                     {% else %}

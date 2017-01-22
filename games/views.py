@@ -51,25 +51,77 @@ def register(request):
     form = UserForm(request.POST or None, prefix='user')
 
     if form.is_valid() and form_extra.is_valid():
-        user = form.save(commit=False)
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user.set_password(password)
-        user.save()
-        useraccount = form_extra.save(commit=False)
-        useraccount.user = user
-        useraccount.save()
+        email = form.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            form.add_error("email", "Correo ya existe")
+        else:
+            user = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user.set_password(password)
+            user.save()
+            useraccount = form_extra.save(commit=False)
+            useraccount.user = user
+            useraccount.save()
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('games:index')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('games:index')
     context = {
         "form": form,
         "form_extra": form_extra,
     }
     return render(request, 'games/register.html', context)
+
+def edit_user(request):
+    u = get_object_or_404(User, pk=request.user.id)
+    old_email = u.email
+    form_extra = UserProfileForm(request.POST or None, prefix='userprofile', instance=u.useraccount)
+    form = UserForm(request.POST or None, prefix='user', instance=u)
+
+    if form.is_valid() and form_extra.is_valid():
+        email = form.cleaned_data['email']
+        if old_email != email:
+            if User.objects.filter(email=email).exists():
+                form.add_error("email", "Correo ya existe")
+            else:
+                u = form.save(commit=False)
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                u.set_password(password)
+                u.save()
+                useraccount = form_extra.save(commit=False)
+                useraccount.user = u
+                useraccount.save()
+
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        return redirect('games:me')
+        else:
+            u = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            u.set_password(password)
+            u.save()
+            useraccount = form_extra.save(commit=False)
+            useraccount.user = u
+            useraccount.save()
+
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('games:me')
+
+    context = {
+        "form": form,
+        "form_extra": form_extra,
+    }
+    return render(request, 'games/edit_user.html', context)
 
 
 def logout_user(request):
