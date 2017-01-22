@@ -206,8 +206,6 @@ def generate_exchange(request):
         guest = User.objects.get(pk=int(request.POST.get("guest").strip()))
         creator_game = Game.objects.get(pk=int(request.POST.get("creator_game").strip()))
         guest_game = Game.objects.get(pk=int(request.POST.get("guest_game").strip()))
-        creator.useraccount.games_owned.remove(creator_game)
-        creator.useraccount.games_wanted.remove(guest_game)
         Exchange.objects.create(creator=creator.useraccount, guest=guest.useraccount, game_creator=creator_game,
                                 game_guest=guest_game)
         return redirect('games:me')
@@ -246,6 +244,13 @@ def exchange_view(request, exchange_id):
                     exchange.exchange_state = state
                     exchange.save()
                     context["message"] = "Gracias por completar el proceso de intercambio"
+                    if state == 1: #Cambio completado
+                        creator = User.objects.get(pk=exchange.creator.user.id)
+                        guest = User.objects.get(pk=exchange.guest.user.id)
+                        creator.useraccount.games_owned.remove(exchange.game_creator)
+                        creator.useraccount.games_wanted.remove(exchange.game_guest)
+                        guest.useraccount.games_owned.remove(exchange.game_guest)
+                        guest.useraccount.games_wanted.remove(exchange.game_creator)
             context["exchange"] = exchange
         else:
             context = {
