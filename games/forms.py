@@ -42,21 +42,60 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    CITIES = (
+        ('Arauca', 'Arauca'),
+        ('Armenia', 'Armenia'),
+        ('Barranquilla', 'Barranquilla'),
+        ('Bogotá', 'Bogotá'),
+        ('Bucaramanga', 'Bucaramanga'),
+        ('Cali', 'Cali'),
+        ('Cartagena', 'Cartagena'),
+        ('Cúcuta', 'Cúcuta'),
+        ('Florencia', 'Florencia'),
+        ('Ibagué', 'Ibagué'),
+        ('Leticia', 'Leticia'),
+        ('Manizales', 'Manizales'),
+        ('Medellín', 'Medellín'),
+        ('Mitú', 'Mitú'),
+        ('Mocoa', 'Mocoa'),
+        ('Montería', 'Montería'),
+        ('Neiva', 'Neiva'),
+        ('Pasto', 'Pasto'),
+        ('Pereira', 'Pereira'),
+        ('Popayán', 'Popayán'),
+        ('Puerto Carreño', 'Puerto Carreño'),
+        ('Puerto Inírida', 'Puerto Inírida'),
+        ('Quibdó', 'Quibdó'),
+        ('Riohacha', 'Riohacha'),
+        ('San Andres', 'San Andres'),
+        ('San José del Guaviare', 'San José del Guaviare'),
+        ('Santa Marta', 'Santa Marta'),
+        ('Sincelejo', 'Sincelejo'),
+        ('Tunja', 'Tunja'),
+        ('Valledupar', 'Valledupar'),
+        ('Villavicencio', 'Villavicencio'),
+        ('Yopal', 'Yopal'),
+    )
+
     picture = forms.CharField(label='Foto de perfil', max_length=250, required=False,
-                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+                              widget=forms.TextInput(attrs={'class': 'form-control'}))
     gamer_id = forms.CharField(label='Gamertag', max_length=20, required=False,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone = forms.CharField(label='Celular', max_length=15, required=True,
+                            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    city = forms.ChoiceField(label='Ciudad', required=True, choices=CITIES,
+                             widget=forms.Select(attrs={'class': 'selectpicker show-tick form-control'}))
 
     class Meta:
         model = UserAccount
-        fields = ['gamer_id', 'picture']
+        fields = ['gamer_id', 'picture', 'phone', 'city']
 
 
 class OwnedGamesForm(forms.ModelForm):
     CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
                Game.objects.all().order_by('name')]
     games_owned = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select mobile-multiselect'}))
+        attrs={'data-placeholder': 'Selecione los juego(s)', 'class': 'chosen-select mobile-multiselect'}))
 
     class Meta:
         model = UserAccount
@@ -67,7 +106,7 @@ class WantedGamesForm(forms.ModelForm):
     CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
                Game.objects.all().order_by('name')]
     games_wanted = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder':'Selecione los juego(s)','class': 'chosen-select mobile-multiselect'}))
+        attrs={'data-placeholder': 'Selecione los juego(s)', 'class': 'chosen-select mobile-multiselect'}))
 
     class Meta:
         model = UserAccount

@@ -36,6 +36,8 @@ class UserAccount(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gamer_id = models.CharField(max_length=100, null=True)
     picture = models.CharField(max_length=250, default="None")
+    phone = models.CharField(max_length=15, default="(000)000-0000")
+    city = models.CharField(max_length=30, default="Colombia")
     games_owned = models.ManyToManyField(Game, related_name="games_owned", blank=True)
     games_wanted = models.ManyToManyField(Game, related_name="games_wanted", blank=True)
 
@@ -49,6 +51,7 @@ class Exchange(models.Model):
     game_creator = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='exchange_game_creator')
     game_guest = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='exchange_game_guest')
     exchange_state = models.IntegerField(default=0)
+    accepted = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['exchange_state']
