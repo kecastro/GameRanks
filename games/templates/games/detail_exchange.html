@@ -20,6 +20,7 @@
             {% endif %}
             <p>{{ exchange.creator }}</p>
             <p><a href="{% url 'games:game_view' exchange.game_creator.id %}">{{ exchange.game_creator }}</a></p>
+            ({{ exchange.creator.city }})
             {% if exchange.game_creator.cover == "None" %}
                 <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
             {% else %}
@@ -34,17 +35,22 @@
             {% endif %}
             <p>{{ exchange.guest}}</p>
             <p><a href="{% url 'games:game_view' exchange.game_guest.id %}">{{ exchange.game_guest }}</a></p>
+            ({{ exchange.guest.city }})
             {% if exchange.game_guest.cover == "None" %}
                 <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
             {% else %}
                 <img class="game_cover_exchange center-block" src="{{ exchange.game_guest.cover }}">
             {% endif %}
         </div>
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-10 col-md-offset-1">
             <p>
             <b>Estatus:</b>
             {% if exchange.exchange_state == 0 %}
-                En proceso <i class="fa fa-hourglass-half"></i>
+                {% if exchange.accepted == True %}
+                    En proceso <i class="fa fa-hourglass-half"></i> - Aceptado <i class="fa fa-time"></i>
+                {% else %}
+                    En proceso <i class="fa fa-hourglass-half"></i> - Esperando aceptacion <i class="fa fa-clock-o"></i>
+                {% endif %}
             {% elif exchange.exchange_state == 1 %}
                 Completado <i class="fa fa-check"></i>
             {% else %}
@@ -53,20 +59,38 @@
             </p>
             {% if request.user.id == exchange.guest.user.id %}
                 {% if  exchange.exchange_state == 0 %}
-                    <div class="col-md-6">
-                        <form style="padding-bottom: 10px" method="post">
-                         {% csrf_token %}
-                            <input type="hidden" name="state" value="1">
-                            <button type="submit" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                         <form method="post">
-                        {% csrf_token %}
-                            <input type="hidden" name="state" value="2">
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
+                    {% if exchange.accepted == True %}
+                        <div class="col-md-6">
+                            <form style="padding-bottom: 10px" method="post">
+                             {% csrf_token %}
+                                <input type="hidden" name="state" value="1">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                             <form method="post">
+                            {% csrf_token %}
+                                <input type="hidden" name="state" value="2">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <p>Aceptas el intercambio ? </p>
+                        <div class="col-md-6">
+                            <form style="padding-bottom: 10px" method="post">
+                             {% csrf_token %}
+                                <input type="hidden" name="accept" value="1">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                             <form method="post">
+                            {% csrf_token %}
+                                <input type="hidden" name="accept" value="2">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    {% endif %}
                 {% endif %}
                 {% if message %}
                     <div style="text-align: center" class=" col-md-8 col-md-offset-2 alert alert-success">

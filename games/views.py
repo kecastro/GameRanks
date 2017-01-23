@@ -239,18 +239,51 @@ def exchange_view(request, exchange_id):
     if request.user.is_authenticated():
         if int(request.user.id) == int(exchange.creator.user.id) or int(request.user.id) == int(exchange.guest.user.id):
             if request.method == "POST":
-                state = int(request.POST.get("state").strip())
-                if exchange.exchange_state == 0:
-                    exchange.exchange_state = state
-                    exchange.save()
-                    context["message"] = "Gracias por completar el proceso de intercambio"
-                    if state == 1: #Cambio completado
-                        creator = User.objects.get(pk=exchange.creator.user.id)
-                        guest = User.objects.get(pk=exchange.guest.user.id)
-                        creator.useraccount.games_owned.remove(exchange.game_creator)
-                        creator.useraccount.games_wanted.remove(exchange.game_guest)
-                        guest.useraccount.games_owned.remove(exchange.game_guest)
-                        guest.useraccount.games_wanted.remove(exchange.game_creator)
+                if 'accept' in request.POST:
+                    accept = int(request.POST.get("accept").strip())
+                    if accept == 1:
+                        exchange.accepted = True
+                        exchange.save()
+                    else:
+                        exchange.accepted = False
+                        exchange.exchange_state = 2
+                        exchange.save()
+                elif 'state' in request.POST:
+                    state = int(request.POST.get("state").strip())
+                    if exchange.exchange_state == 0:
+                        exchange.exchange_state = state
+                        exchange.save()
+                        context["message"] = "Gracias por completar el proceso de intercambio"
+                        if state == 1: #Cambio completado
+                            creator = User.objects.get(pk=exchange.creator.user.id)
+                            guest = User.objects.get(pk=exchange.guest.user.id)
+                            creator.useraccount.games_owned.remove(exchange.game_creator)
+                            creator.useraccount.games_wanted.remove(exchange.game_guest)
+                            guest.useraccount.games_owned.remove(exchange.game_guest)
+                            guest.useraccount.games_wanted.remove(exchange.game_creator)
+
+                            #if exchange is completed, all pending exchanges that have
+                            #the games from the completed exchange, will be terminated
+                            for x in creator.useraccount.exchange_creator.all():
+                                if x.game_creator.id == exchange.game_creator.id:
+                                    if x.exchange_state == 0:
+                                        x.exchange_state = 2
+                                        x.save()
+                            for x in creator.useraccount.exchange_guest.all():
+                                if x.game_guest.id == exchange.game_creator.id:
+                                    if x.exchange_state == 0:
+                                        x.exchange_state = 2
+                                        x.save()
+                            for x in guest.useraccount.exchange_guest.all():
+                                if x.game_guest.id == exchange.game_guest.id:
+                                    if x.exchange_state == 0:
+                                        x.exchange_state = 2
+                                        x.save()
+                            for x in guest.useraccount.exchange_creator.all():
+                                if x.game_creator.id == exchange.game_guest.id:
+                                    if x.exchange_state == 0:
+                                        x.exchange_state = 2
+                                        x.save()
             context["exchange"] = exchange
         else:
             context = {

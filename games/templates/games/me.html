@@ -7,12 +7,12 @@
         <div class="col-md-12">
             <div class="col-md-4">
                 <div style="text-align: center;" class="jumbotron">
-                    <a href="{% url 'games:edit_me' %}"><i class="fa fa-edit"></i></a>
                     {% if me.useraccount.picture == "None" %}
                         <img class="thumbnail center-block" src="{% static 'games/img/default-user.png' %}">
                     {% else %}
                         <img class="thumbnail center-block" src="{{ me.useraccount.picture }}">
                     {% endif %}
+                    <button class="btn btn-default"><a href="{% url 'games:edit_me' %}"> Editar Perfil <i class="fa fa-edit"></i></a></button>
                     <h3>{{ me.first_name }}</h3>
 
                     <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
