@@ -254,7 +254,7 @@ def exchange_view(request, exchange_id):
                         exchange.exchange_state = state
                         exchange.save()
                         context["message"] = "Gracias por completar el proceso de intercambio"
-                        if state == 1: #Cambio completado
+                        if state == 1 and exchange.accepted is True: #Cambio completado
                             creator = User.objects.get(pk=exchange.creator.user.id)
                             guest = User.objects.get(pk=exchange.guest.user.id)
                             creator.useraccount.games_owned.remove(exchange.game_creator)

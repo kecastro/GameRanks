@@ -19,6 +19,17 @@
                 <img class="thumbnail-sm center-block" src="{{ exchange.creator.picture }}">
             {% endif %}
             <p>{{ exchange.creator }}</p>
+            {% if exchange.accepted == True and exchange.exchange_state != 2 %}
+                <div class="panel panel-success">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Contacto</h3>
+                  </div>
+                  <div class="panel-body">
+                    <h5><i class="fa fa-whatsapp"> {{ exchange.creator.phone }}</i></h5>
+                    <h5><i class="fa fa-envelope-o"> {{ exchange.creator.user.email}}</i></h5>
+                  </div>
+                </div>
+            {% endif %}
             <p><a href="{% url 'games:game_view' exchange.game_creator.id %}">{{ exchange.game_creator }}</a></p>
             ({{ exchange.creator.city }})
             {% if exchange.game_creator.cover == "None" %}
@@ -34,6 +45,17 @@
                 <img class="thumbnail-sm center-block" src="{{ exchange.guest.picture }}">
             {% endif %}
             <p>{{ exchange.guest}}</p>
+            {% if exchange.accepted == True and exchange.exchange_state != 2%}
+                <div class="panel panel-success">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Contacto</h3>
+                  </div>
+                  <div class="panel-body">
+                    <h5><i class="fa fa-whatsapp"> {{ exchange.guest.phone }}</i></h5>
+                    <h5><i class="fa fa-envelope-o"> {{ exchange.guest.user.email}}</i></h5>
+                  </div>
+                </div>
+            {% endif %}
             <p><a href="{% url 'games:game_view' exchange.game_guest.id %}">{{ exchange.game_guest }}</a></p>
             ({{ exchange.guest.city }})
             {% if exchange.game_guest.cover == "None" %}
@@ -47,7 +69,7 @@
             <b>Estatus:</b>
             {% if exchange.exchange_state == 0 %}
                 {% if exchange.accepted == True %}
-                    En proceso <i class="fa fa-hourglass-half"></i> - Aceptado <i class="fa fa-time"></i>
+                    En proceso <i class="fa fa-hourglass-half"></i> - Aceptado <i class="fa fa-thumbs-o-up"></i>
                 {% else %}
                     En proceso <i class="fa fa-hourglass-half"></i> - Esperando aceptacion <i class="fa fa-clock-o"></i>
                 {% endif %}
@@ -60,6 +82,7 @@
             {% if request.user.id == exchange.guest.user.id %}
                 {% if  exchange.exchange_state == 0 %}
                     {% if exchange.accepted == True %}
+                        <p>Como termino el intercambio ? </p>
                         <div class="col-md-6">
                             <form style="padding-bottom: 10px" method="post">
                              {% csrf_token %}

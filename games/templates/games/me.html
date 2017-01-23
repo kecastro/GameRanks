@@ -71,7 +71,11 @@
                                     <td class="mobile-table-big">{{ x.game_creator }}</td>
                                     <td>{{ x.guest }}</td>
                                     <td>{{ x.game_guest }}</td>
-                                    <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
+                                    {% if x.accepted == True %}
+                                        <td><i class="fa fa-hourglass-half"></i><i class="fa fa-thumbs-o-up"></i></td>
+                                    {% else %}
+                                        <td><i class="fa fa-hourglass-half"></i><i class="fa fa-clock-o"></i></td>
+                                    {% endif %}
                                     <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
                                 </tr>
                             {% elif x.exchange_state == 1 %}
@@ -126,7 +130,11 @@
                                     <td>{{ x.game_guest }}</td>
                                     <td class="mobile-table-big">{{ x.creator }}</td>
                                     <td class="mobile-table-big">{{ x.game_creator }}</td>
-                                    <td><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>
+                                    {% if x.accepted == True %}
+                                        <td><i class="fa fa-hourglass-half"></i><i class="fa fa-thumbs-o-up"></i></td>
+                                    {% else %}
+                                        <td><i class="fa fa-hourglass-half"></i><i class="fa fa-clock-o"></i></td>
+                                    {% endif %}
                                     <td><a href="{% url 'games:exchange_view' x.id %}"> Ver</a></td>
                                 </tr>
                             {% elif x.exchange_state == 1 %}
