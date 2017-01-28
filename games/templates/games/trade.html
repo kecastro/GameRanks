@@ -1,7 +1,7 @@
 {% extends 'games/base.html' %}
 {% block title %}Oferta de juegos{% endblock %}
 {% load staticfiles %}
-{% block header %}
+{% block head %}
     <link rel="stylesheet" href="{% static "games/css/chosen.min.css" %}">
     <script src="{% static "games/js/chosen.jquery.min.js" %}"></script>
 {% endblock %}
@@ -33,6 +33,6 @@
 
 {% endblock %}
 
-{% block extra_js %}
+{% block footer %}
     <script src="{% static "games/js/chosen.js" %}"></script>
 {% endblock %}

@@ -15,86 +15,117 @@
         <link rel="stylesheet" href="{% static "games/css/styles.css" %}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        {% block header %}{% endblock %}
+        {% block head %}{% endblock %}
     </head>
 
     <body>
-          <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="{% url 'games:index' %}">
-                  <i class="fa fa-gamepad" aria-hidden="true"></i> Game Ranks
-              </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li><a href="{% url 'games:index' %}">
-                    <i class="fa fa-home" aria-hidden="true"></i> Inicio </a>
-                </li>
-                <li><a href="{% url 'games:all_games' %}">
-                    <i class="fa fa-cubes" aria-hidden="true"></i> Juegos</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'games:trade' %}">
-                        <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
-                    </li>
-                {% else %}
-                    <li><a href="{% url "games:register" %}">
-                        <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
-                    </li>
-                {% endif %}
-
-              </ul>
-                <div class="col-sm-3 col-md-3">
-                    <form class="navbar-form" role="search">
-                    <div class="input-group">
-                        {% csrf_token %}
-                        <input id="search-input" type="text" class="form-control" placeholder="Buscar juegos">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    </div>
-                    </form>
+        <header class="page-row">
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="{% url 'games:index' %}">
+                      <i class="fa fa-gamepad" aria-hidden="true"></i> Game Ranks
+                  </a>
                 </div>
-              <ul class="nav navbar-nav right-nav">
-                {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'games:me'%}"><i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'games:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar sesión</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{% url 'games:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Iniciar sesión</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'games:register' %}"><i class="fa fa-id-card-o" aria-hidden="true"></i> Registrarse</a>
-                    </li>
-                {% endif %}
-              </ul>
-            </div>
-          </div>
-        </nav>
 
-		 <div class="row">
-             <div id="main-results-search" class="col-md-6 col-md-offset-3">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                    <li><a href="{% url 'games:index' %}">
+                        <i class="fa fa-home" aria-hidden="true"></i> Inicio </a>
+                    </li>
+                    <li><a href="{% url 'games:all_games' %}">
+                        <i class="fa fa-cubes" aria-hidden="true"></i> Juegos</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'games:trade' %}">
+                            <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url "games:register" %}">
+                            <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>
+                        </li>
+                    {% endif %}
 
+                  </ul>
+                    <div class="col-sm-3 col-md-3">
+                        <form class="navbar-form" role="search">
+                        <div class="input-group">
+                            {% csrf_token %}
+                            <input id="search-input" type="text" class="form-control" placeholder="Buscar juegos">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        </div>
+                        </form>
+                    </div>
+                  <ul class="nav navbar-nav right-nav">
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'games:me'%}"><i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'games:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar sesión</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'games:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Iniciar sesión</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'games:register' %}"><i class="fa fa-id-card-o" aria-hidden="true"></i> Registrarse</a>
+                        </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </nav>
+        </header>
+
+        <main class="page-row page-row-expanded">
+
+             <!-- Search gamer results -->
+             <div class="row">
+                 <div id="main-results-search" class="col-md-6 col-md-offset-3">
+
+                 </div>
              </div>
-         </div>
 
-        {% block body %}{% endblock %}
+            <!-- Page content -->
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="page-row">
+            <script src="{% static "games/js/game_search.js" %}"></script>
+            {% block footer %}{% endblock %}
+
+            <div class="footer-distributed">
+                <div class="footer-right">
+
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+
+                </div>
+
+                <div class="footer-left">
+
+                    <p class="footer-links">
+                        <a href="{% url 'games:index' %}">Inicio</a>
+                        ·
+                        <a href="#">Ayuda</a>
+                        ·
+                        <a href="#">Acerca</a>
+                        ·
+                        <a href="#">Contacto</a>
+                    </p>
+
+                    <p>Game Ranks &copy; 2017</p>
+                </div>
+            </div>
+        </footer>
 
     </body>
-    <footer>
-        <script type="text/javascript" src="{% static "games/js/game_search.js" %}"></script>
-        {% block extra_js %}{% endblock %}
-    </footer>
-
 </html>
