@@ -18,5 +18,5 @@ urlpatterns = [
     url(r'^(?P<game_id>[0-9]+)/(?P<user_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^search/$', views.search_game, name='search_game'),
     url(r'^searchuser/$', views.search_user, name='search_user'),
-
+    url(r'^contact/$', views.contact, name='contact'),
 ]

@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404, render_to_resp
 from django import forms
 from django.contrib import messages
 from django.db.models import Q
+from django.core.mail import send_mail
 
 from .models import *
 from .forms import *
@@ -208,6 +209,11 @@ def generate_exchange(request):
         guest_game = Game.objects.get(pk=int(request.POST.get("guest_game").strip()))
         Exchange.objects.create(creator=creator.useraccount, guest=guest.useraccount, game_creator=creator_game,
                                 game_guest=guest_game)
+
+        message_guest = 'El usuario ' + str(creator.username) + ' ha generado un intercambio, visita tu perfil para verlo'
+        send_mail('Intercambio generado', message_guest, 'soporte-gameranks@outlook.com',
+                  [guest.email], fail_silently=True)
+
         return redirect('games:me')
     else:
         context = {}
@@ -307,3 +313,16 @@ def search_user(request):
         usernames = User.objects.filter(Q(username__icontains=query))[:10]
         return render(request, 'games/user_search.html', {'users':usernames})
     return render(request, 'games/user_search.html')
+
+def contact(request):
+    if request.method == 'POST':
+        message = request.POST.get("message")
+        name = "Nombre: " + str(request.POST.get("name"))
+        email = "Correo: " + str(request.POST.get("email"))
+
+        m = "\n".join([name, ' ', email, ' ', message])
+
+        send_mail('Mensaje enviado', m, 'soporte-gameranks@outlook.com',
+                  ['soporte-gameranks@outlook.com', str(request.POST.get("email"))], fail_silently=True)
+        return render(request, 'games/contact.html', {'message':'Mensaje enviado satisfactoriamente'})
+    return render(request, 'games/contact.html')
