@@ -1,5 +1,7 @@
 {% extends 'games/base.html' %}
 {% block title %}Intercambios{% endblock %}
+{% load staticfiles %}
+
 {% block body %}
     <h3 style=" color:#acdfb8; text-align: center;">Posibles intercambios</h3>
 
@@ -29,13 +31,12 @@
                             <td>{{ value.guest.username }}</td>
                             <td>{{ value.guestGame}}</td>
                             <td>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="creator" value="{{ value.creator.id }}">
-                                    <input type="hidden" name="guest" value="{{ value.guest.id }}">
-                                    <input type="hidden" name="creator_game" value="{{ value.creatorGame.id }}">
-                                    <input type="hidden" name="guest_game" value="{{ value.guestGame.id }}">
-                                    <button class="btn btn-success center-block" type="submit"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                <form id="loading-form" method="post">
+                                    <input id="creator" type="hidden" name="creator" value="{{ value.creator.id }}">
+                                    <input id="guest" type="hidden" name="guest" value="{{ value.guest.id }}">
+                                    <input id="creator_game" type="hidden" name="creator_game" value="{{ value.creatorGame.id }}">
+                                    <input id="guest_game" type="hidden" name="guest_game" value="{{ value.guestGame.id }}">
+                                    <button id="submit-button" class="btn btn-success center-block" type="submit"><i class="fa fa-arrow-right"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -43,7 +44,13 @@
                     </tbody>
                 </table>
             </div>
+            <div  id="results" style="text-align: center" class=" col-md-8 col-md-offset-2"></div>
         </div>
+        <div id='spinner' class='col-md-2 col-md-offset-5'></div>
     {% endif %}
 {% endblock %}
 
+{% block footer %}
+    <script src="{% static "games/js/spin.min.js" %}"></script>
+    <script src="{% static "games/js/loading.js" %}"></script>
+{% endblock %}

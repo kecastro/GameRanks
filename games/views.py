@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
@@ -12,6 +12,8 @@ from django.core.mail import send_mail
 from .models import *
 from .forms import *
 from django.contrib.auth.models import User
+
+import json
 
 
 # Create your views here.
@@ -197,25 +199,28 @@ def add_trade_games(request):
 
     return render(request, 'games/trade.html', context)
 
-
 def generate_exchange(request):
-
-    user = get_object_or_404(User, username=request.user.username)
 
     if request.method == "POST":
         creator = User.objects.get(pk=int(request.POST.get("creator").strip()))
         guest = User.objects.get(pk=int(request.POST.get("guest").strip()))
         creator_game = Game.objects.get(pk=int(request.POST.get("creator_game").strip()))
         guest_game = Game.objects.get(pk=int(request.POST.get("guest_game").strip()))
-        Exchange.objects.create(creator=creator.useraccount, guest=guest.useraccount, game_creator=creator_game,
+        e = Exchange.objects.create(creator=creator.useraccount, guest=guest.useraccount, game_creator=creator_game,
                                 game_guest=guest_game)
 
         message_guest = 'El usuario ' + str(creator.username) + ' ha generado un intercambio, visita tu perfil para verlo'
         send_mail('Intercambio generado', message_guest, 'soporte-gameranks@outlook.com',
                   [guest.email], fail_silently=True)
 
-        return redirect('games:me')
+        data = {
+            'm': 'Cambio generado exitosamente',
+            'e': e.id
+        }
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
     else:
+        user = get_object_or_404(User, username=request.user.username)
         context = {}
         response = {}
         exchangeObject = {}
@@ -324,5 +329,9 @@ def contact(request):
 
         send_mail('Mensaje enviado', m, 'soporte-gameranks@outlook.com',
                   ['soporte-gameranks@outlook.com', str(request.POST.get("email"))], fail_silently=True)
-        return render(request, 'games/contact.html', {'message':'Mensaje enviado satisfactoriamente'})
+        data = {
+            'm': 'Mensaje enviado satisfactoriamente'
+        }
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
     return render(request, 'games/contact.html')

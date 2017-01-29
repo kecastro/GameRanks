@@ -1,12 +1,12 @@
 {% extends 'games/base.html' %}
 {% block title %}Contacto{% endblock %}
+{% load staticfiles %}
 {% block body %}
     <div class="container">
         <div class="row">
           <div class="col-md-6 col-md-offset-3">
             <div class="well well-sm">
-              <form class="form-horizontal" method="post">
-                  {% csrf_token %}
+              <form id="loading-contact-form" class="form-horizontal" method="post">
                   <fieldset>
                     <legend class="text-center">Contactenos</legend>
 
@@ -18,26 +18,36 @@
                       </div>
                     </div>
 
-                    <!-- Email input-->
-                    <div class="form-group">
-                      <label class="col-md-3 control-label" for="email">Tu E-mail</label>
-                      <div class="col-md-9">
-                        <input id="email" name="email" type="text" placeholder="Tu correo" class="form-control">
-                      </div>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <!-- Email input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="email">Tu E-mail</label>
+                          <div class="col-md-9">
+                            <input id="email" name="email" type="text" value="{{ user.email }}" class="form-control" readonly>
+                          </div>
+                        </div>
+                    {% else %}
+                        <!-- Email input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="email">Tu E-mail</label>
+                          <div class="col-md-9">
+                            <input id="email" name="email" type="text" placeholder="Tu correo" class="form-control">
+                          </div>
+                        </div>
+                    {% endif %}
 
                     <!-- Message body -->
                     <div class="form-group">
                       <label class="col-md-3 control-label" for="message">Tu Mensaje</label>
                       <div class="col-md-9">
-                        <textarea class="form-control" id="message" name="message" placeholder="Por favor ingrese su mensage..." rows="5"></textarea>
+                        <textarea class="form-control" id="message" name="message" placeholder="Por favor ingrese su mensaje..." rows="5"></textarea>
                       </div>
                     </div>
 
                     <!-- Form actions -->
                     <div class="form-group">
                       <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-primary btn-lg">Enviar</button>
+                        <button id="submit-button" type="submit" class="btn btn-primary btn-lg">Enviar</button>
                       </div>
                     </div>
                   </fieldset>
@@ -46,9 +56,11 @@
           </div>
         </div>
     </div>
-    {% if message %}
-        <div style="text-align: center" class=" col-md-8 col-md-offset-2 alert alert-success">
-            {{ message }}
-        </div>
-    {% endif %}
+    <div  id="results" style="text-align: center" class=" col-md-8 col-md-offset-2"></div>
+    <div id='spinner' class='col-md-2 col-md-offset-5'></div>
+{% endblock %}
+
+{% block footer %}
+    <script src="{% static "games/js/spin.min.js" %}"></script>
+    <script src="{% static "games/js/loading.js" %}"></script>
 {% endblock %}
