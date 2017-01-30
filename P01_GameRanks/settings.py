@@ -11,19 +11,20 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from P01_GameRanks.my_config import ENV
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+SKEY = os.environ.get('SKEY')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ENV["SKEY"]
+SECRET_KEY = SKEY
 
 
 # Application definition
@@ -73,7 +74,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'soporte-gameranks@outlook.com'
-EMAIL_HOST_PASSWORD = ENV["MAIL_PASSWORD"]
+EMAIL_HOST_PASSWORD = MAIL_PASSWORD
 
 WSGI_APPLICATION = 'P01_GameRanks.wsgi.application'
 

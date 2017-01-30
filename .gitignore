@@ -89,7 +89,6 @@ target/
 venv
 .DS_Store
 local_settings.py
-my_config.py
 database-filling.py
 
 
