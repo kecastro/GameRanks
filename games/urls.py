@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^search/$', views.search_game, name='search_game'),
     url(r'^searchuser/$', views.search_user, name='search_user'),
     url(r'^contact/$', views.contact, name='contact'),
+    url(r'^about/$', views.about, name='about'),
+    url(r'^help/$', views.help, name='help'),
 ]

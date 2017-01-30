@@ -335,3 +335,9 @@ def contact(request):
 
         return HttpResponse(json.dumps(data), content_type="application/json")
     return render(request, 'games/contact.html')
+
+def about(request):
+    return render(request, 'games/about.html')
+
+def help(request):
+    return render(request, 'games/help.html')
