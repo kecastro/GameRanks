@@ -148,6 +148,15 @@ ul
     }
 }
 
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand>img {
+  height: 100%;
+  padding: 7px 15px;
+  width: auto;
+}
+
 
 /* Hide column if device is too small */
 @media (max-width: 375px){
