@@ -15,6 +15,192 @@ ul
     list-style-type: none;
 }
 
+/* Plantilla de un slider */
+
+/* Ajustar tamano de las imagenes en la seccion de noticias */
+
+#cc-slider {
+	text-align: center;
+	margin: 0 auto;
+	max-width: 850px;
+}
+
+#cc-slider input {
+	display: none;
+}
+
+#cc-slider label, a {
+	color: #ef023f;
+	cursor: pointer;
+	text-decoration: none;
+}
+#cc-slider label:hover {
+	color: #ff0042 !important;
+}
+
+#slide1:checked ~ #cc-slides .inner { margin-left:0; }
+#slide2:checked ~ #cc-slides .inner { margin-left:-100%; }
+#slide3:checked ~ #cc-slides .inner { margin-left:-200%; }
+
+
+#overflow {
+	width: 100%;
+	overflow: hidden;
+}
+
+#cc-slides article img {
+	width: 100%;
+}
+
+#cc-slides .inner {
+	width: 500%;
+	line-height: 0;
+}
+
+#cc-slides article {
+	width: 20%;
+	float: left;
+}
+
+#controls {
+	margin: -8% 0 0 84%;
+	width: 15%;
+	height: 50px;
+}
+
+#controls label {
+	display: none;
+	width: 50px;
+	height: 50px;
+
+}
+
+#active {
+	margin: 23% 0 0;
+	text-align: center;
+}
+
+#active label {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background: #f89e67;
+}
+
+#active label:hover {
+	background: #ccc;
+	border-color: #777 !important;
+}
+
+#controls label:hover {
+	opacity: 0.8;
+}
+
+#slide1:checked ~ #controls label:nth-child(2),
+#slide2:checked ~ #controls label:nth-child(3),
+#slide3:checked ~ #controls label:nth-child(1) {
+	background: url('../img/next.png') no-repeat;
+	float: right;
+	margin: 0 10px 0 0;
+	display: block;
+	background-color:#009966;
+}
+
+
+#slide1:checked ~ #controls label:nth-child(3),
+#slide2:checked ~ #controls label:nth-child(1),
+#slide3:checked ~ #controls label:nth-child(2) {
+	background: url('../img/prev.png') no-repeat;
+	float: left;
+	margin: 0 0 0 17px;
+	display: block;
+	background-color:#009966;
+}
+
+
+/* Estilo del slider */
+
+#cc-slides {
+	margin: 45px 0 0;
+
+
+	padding: 1%;
+
+	background: #fff;
+
+}
+
+
+/* Animacion */
+
+#cc-slides .inner {
+	-webkit-transform: translateZ(0);
+	-webkit-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+	-moz-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    -ms-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+     -o-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000); /* easeInOutQuart */
+
+	-webkit-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+	-moz-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    -ms-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+     -o-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000); /* easeInOutQuart */
+}
+
+#cc-slider {
+	-webkit-transform: translateZ(0);
+	-webkit-transition: all 0.5s ease-out;
+	-moz-transition: all 0.5s ease-out;
+	-o-transition: all 0.5s ease-out;
+	transition: all 0.5s ease-out;
+}
+
+#controls label{
+	-webkit-transform: translateZ(0);
+	-webkit-transition: opacity 0.2s ease-out;
+	-moz-transition: opacity 0.2s ease-out;
+	-o-transition: opacity 0.2s ease-out;
+	transition: opacity 0.2s ease-out;
+}
+
+
+@media screen and (max-width: 480px){
+
+    /* Siguiente y anterior del slider */
+    #controls label {
+	display: none;
+	width: 20px;
+	height: 20px;
+
+    }
+
+    #slide1:checked ~ #controls label:nth-child(2),
+    #slide2:checked ~ #controls label:nth-child(3),
+    #slide3:checked ~ #controls label:nth-child(1)  {
+        background: url('../img/next_resp.png') no-repeat;
+        float: right;
+        margin: 0 10px 0 0;
+        display: block;
+        background-color:#009966;
+    }
+
+
+    #slide1:checked ~ #controls label:nth-child(3),
+    #slide2:checked ~ #controls label:nth-child(1),
+    #slide3:checked ~ #controls label:nth-child(2) {
+        background: url('../img/prev_resp.png') no-repeat;
+        float: left;
+        margin: 0 0 0 17px;
+        display: block;
+        background-color:#009966;
+    }
+
+}
+
 
 /*----------------- Transparent design -----------------*/
 .jumbotron{

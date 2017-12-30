@@ -1,8 +1,37 @@
 {% extends 'games/base.html' %}
 {% block title %}Game Ranks{% endblock %}
+{% load staticfiles %}
 
 {% block body %}
     <div class="col-md-10  col-md-offset-1">
+
+        <div style="padding-bottom: 5%;">
+        <!-- Slider de solo css -->
+        <article id="cc-slider">
+          <input checked="checked" name="cc-slider" id="slide1" type="radio">
+          <input name="cc-slider" id="slide2" type="radio">
+          <input name="cc-slider" id="slide3" type="radio">
+          <div id="cc-slides">
+            <div id="overflow">
+              <div class="inner">
+                <article>
+                  <img src="{% static "games/img/slide-1.jpg" %}"> </article>
+                <article>
+                  <img src="{% static "games/img/slide-2.jpg" %}"> </article>
+                <article>
+                  <img src="{% static "games/img/slide-3.jpg" %}"> </article>
+              </div>
+            </div>
+          </div>
+          <div id="controls">
+            <label for="slide1"></label>
+            <label for="slide2"></label>
+            <label for="slide3"></label>
+          </div>
+        </article>
+
+        </div>
+
         <div class="panel">
           <div class="panel-heading">
             <h3 class="panel-title" style="text-align: center">
@@ -29,4 +58,8 @@
           </table>
         </div>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script src="{% static "games/js/gameranks.js" %}"></script>
 {% endblock %}
