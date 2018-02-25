@@ -15,12 +15,12 @@ CONSOLES = (
 
 class Game(models.Model):
     igdb = models.CharField(max_length=10)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
     rating = models.FloatField(null=True)
     release = models.DateField(null=True)
     screenshots = models.CharField(max_length=2000, null=True)
-    cover = models.CharField(max_length=100, null=True)
-    platform = models.CharField(max_length=100)
+    cover = models.CharField(max_length=1000, null=True)
+    platform = models.CharField(max_length=500)
 
     def __str__(self):
         return str(self.name)
