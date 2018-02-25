@@ -30,7 +30,7 @@ class IndexView(ListView):
     template_name = 'games/index.html'
     context_object_name = 'top_10_games'
     today = datetime.datetime.now()
-    queryset = Game.objects.filter( Q(release__year=today.year)).order_by('-rating')[:10]
+    queryset = Game.objects.order_by('-rating').filter(Q(release__year=today.year))[:10]
 
 
 
