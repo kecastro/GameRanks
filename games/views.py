@@ -29,9 +29,8 @@ import json, datetime
 class IndexView(ListView):
     template_name = 'games/index.html'
     context_object_name = 'top_10_games'
-    today = datetime.datetime.now()
-    queryset = Game.objects.order_by('-rating').filter(Q(release__year=today.year))[:10]
-
+    best_games = Game.objects.order_by('-rating')
+    queryset = best_games.filter(release__year=2018)[:10]
 
 
 class GameView(DetailView):

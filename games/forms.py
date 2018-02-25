@@ -15,7 +15,7 @@ class UserForm(forms.ModelForm):
     username = forms.CharField(validators=[username_validator], max_length=20,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    first_name = forms.CharField(validators=[first_name_validator], max_length=20, required=True,
+    first_name = forms.CharField(validators=[first_name_validator], label='Nombre', max_length=20, required=True,
                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(validators=[last_name_validator], label='Apellido', max_length=20, required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
