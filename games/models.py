@@ -18,7 +18,7 @@ class Game(models.Model):
     name = models.CharField(max_length=50)
     rating = models.FloatField(null=True)
     release = models.DateField(null=True)
-    screenshots = models.CharField(max_length=600, null=True)
+    screenshots = models.CharField(max_length=2000, null=True)
     cover = models.CharField(max_length=100, null=True)
     platform = models.CharField(max_length=100)
 
