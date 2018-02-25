@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'games',
+    'background_task',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -98,8 +99,9 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = ( )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 #HEROKU
 

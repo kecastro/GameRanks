@@ -1,3 +1,10 @@
+import urllib
+
+import simplejson
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseForbidden
+from django.http import HttpResponseNotFound
+from django.http import QueryDict
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect, HttpResponse
@@ -9,26 +16,22 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import send_mail
 
+
 from .models import *
+from .tasks import *
 from .forms import *
 from django.contrib.auth.models import User
 
-import json
+import json, datetime
 
 
 # Create your views here.
 class IndexView(ListView):
     template_name = 'games/index.html'
-    context_object_name = 'top_3_games'
-    queryset = Game.objects.order_by('-votes')[:3]
+    context_object_name = 'top_10_games'
+    today = datetime.datetime.now()
+    queryset = Game.objects.filter( Q(release__year=today.year)).order_by('-rating')[:10]
 
-
-class AllGamesView(ListView):
-    model = Game
-    template_name = 'games/all_games.html'
-    context_object_name = 'all_games'
-    paginate_by = 10
-    queryset = Game.objects.all().order_by('-votes')
 
 
 class GameView(DetailView):
@@ -152,52 +155,103 @@ def login_user(request):
     return render(request, 'games/login.html')
 
 
-def vote(request, game_id, user_id):
-    u = get_object_or_404(User, pk=user_id)
-    g = get_object_or_404(Game, pk=game_id)
-    if Vote.objects.filter(user=u, game=g).exists():
-        messages.error(request, "Solo se puede votar una vez por juego")
-        return HttpResponseRedirect(reverse('games:game_view', kwargs={'pk': g.id}))
+def getSearchGames(request, query):
+    if request.user.is_authenticated():
+        games = json.dumps([g.get_json() for g in Game.objects.filter(name__icontains=query)])
+        return HttpResponse(games)
     else:
-        if int(user_id) != int(request.user.id):
-            messages.error(request, "Acesso restringido")
-            return HttpResponseRedirect(reverse('games:game_view', kwargs={'pk': g.id}))
-        else:
-            v = Vote(game=g, user=u)
-            v.save()
-            g.votes += 1
-            g.save()
-            messages.success(request, "Gracias por votar")
-            return HttpResponseRedirect(reverse('games:game_view', kwargs={'pk': g.id}))
-
+        return HttpResponseBadRequest()
 
 def add_trade_games(request):
-    user = User.objects.get(pk=request.user.id).useraccount
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            for game in simplejson.loads(request.body):
+                g = get_object_or_404(Game, pk=game["id"])
+                if len(request.user.useraccount.trading_user.filter(Q(game=g) & Q(platform=game["platform"]))) <= 0:
+                    trade = TradeOption.objects.create(game=g, user=request.user.useraccount, type=game["type"], platform=game["platform"])
+            return HttpResponse()
+        return render(request, 'games/trade.html')
+    else:
+        return redirect('games:login')
 
-    if request.method == 'POST':
-        owned_form = OwnedGamesForm(request.POST, instance=user)
-        wanted_form = WantedGamesForm(request.POST, instance=user)
+def add_game(request):
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            from igdb_api_python.igdb import igdb
+            igdb = igdb("dfd4b285e76c0d3f97a549b2edd9467e")
+            context = {}
+            if request.POST['action'] == "search":
+                possible_games = {}
+                consoles = [9,12,37,41,46,48,49]
+                result = igdb.games({
+                    'search': request.POST['query'],
+                    'limit': 50,
+                    'fields': ['name', 'release_dates', 'cover']
+                })
+                for game in result.body:
+                    if "release_dates" in game:
+                        can_add = False
+                        for platforms in game["release_dates"]:
+                            if platforms['platform'] in consoles:
+                                can_add = True
+                        if can_add:
+                            possible_games[game["id"]] = {"id": game["id"], "name": game["name"], "cover": game["cover"]["url"][2:] if "cover" in game else None}
+                context["possible_games"] = possible_games
+                context["not_found"] = True
+                return render(request, 'games/add_game.html', context)
+            elif request.POST['action'] == "add":
+                g = Game.objects.filter(igdb=request.POST['game_id'])
+                if g.exists():
+                    context["message"] = "El juego ya existe en la base de datos"
+                    context["game_id"] = g[0].id
+                else:
+                    consoles_id = {"9":"PlayStation 3", "12":"Xbox 360", "37":"Nintendo 3DS", "41":"Wii U", "46":"PlayStation Vita", "48":"PlayStation 4", "49":"Xbox One"}
+                    result = igdb.games({
+                        'ids': int(request.POST['game_id']),
+                        'fields': ['name','release_dates', 'cover', 'screenshots', 'first_release_date', 'aggregated_rating']
+                    })
+                    for game in result.body:
 
-        if owned_form.is_valid() and wanted_form.is_valid():
-            owned_form.save()
-            wanted_form.save()
 
-            return redirect('games:me')
-        else:
-            context = {
-                "owned_form": OwnedGamesForm(instance=user),
-                "wanted_form": WantedGamesForm(instance=user),
-                "error_message": "Se debe seleccionar como minimo 1 juego de cada categoria (Ofrecer-Querer)"
-            }
+                        tmp_s = game["screenshots"] if "screenshots" in game else None
 
-            return render(request, 'games/trade.html', context)
+                        screenshots = ""
 
-    context = {
-        "owned_form": OwnedGamesForm(instance=user),
-        "wanted_form": WantedGamesForm(instance=user),
-    }
+                        if tmp_s != None:
+                            for s in tmp_s:
+                                url = s["url"][2:]
+                                screenshots += url.replace("t_thumb", "t_original") + ","
+                            screenshots = screenshots[:-1]
+                        else:
+                            screenshots = None
 
-    return render(request, 'games/trade.html', context)
+                        tmp_p = game["release_dates"] if "release_dates" in game else None
+
+                        platforms = ""
+
+                        duplicate_regions = []
+
+                        if tmp_p != None:
+                            for p in game["release_dates"]:
+                                if str(p["platform"]) in consoles_id and str(p["platform"]) not in duplicate_regions:
+                                    platforms += consoles_id[str(p["platform"])] + ","
+                                    duplicate_regions.append(str(p["platform"]))
+                            platforms = platforms[:-1]
+
+                        new_game = Game.objects.create(igdb=game["id"],
+                                                       name=game["name"],
+                                                       rating=game["aggregated_rating"] if "aggregated_rating" in game else None,
+                                                       release=datetime.datetime.fromtimestamp(int(game["first_release_date"]/1000)).strftime('%Y-%m-%d') if "first_release_date" in game else None,
+                                                       screenshots=screenshots,
+                                                       cover=game["cover"]["url"][2:].replace("t_thumb", "t_original") if "cover" in game else None,
+                                                       platform=platforms)
+                        context["message"] = "Juego agregado existosamente"
+                        context["game_id"] = new_game.id
+                return render(request, 'games/add_game.html', context)
+        return render(request, 'games/add_game.html')
+    else:
+        return redirect('games:login')
+
 
 def generate_exchange(request):
 
@@ -205,39 +259,44 @@ def generate_exchange(request):
         creator = User.objects.get(pk=int(request.POST.get("creator").strip()))
         guest = User.objects.get(pk=int(request.POST.get("guest").strip()))
         creator_game = Game.objects.get(pk=int(request.POST.get("creator_game").strip()))
+        creator_platform = request.POST.get("creator_platform").strip()
         guest_game = Game.objects.get(pk=int(request.POST.get("guest_game").strip()))
+        guest_platform = request.POST.get("guest_platform").strip()
+
         e = Exchange.objects.create(creator=creator.useraccount, guest=guest.useraccount, game_creator=creator_game,
-                                game_guest=guest_game)
+                                creator_platform=creator_platform,game_guest=guest_game, guest_platform=guest_platform)
 
         message_guest = 'El usuario ' + str(creator.username) + ' ha generado un intercambio, visita tu perfil para verlo'
-        send_mail('Intercambio generado', message_guest, 'soporte-gameranks@outlook.com',
-                  [guest.email], fail_silently=True)
+        email('Intercambio generado', message_guest, 'soporte-gameranks@outlook.com', guest.email)
 
         data = {
             'm': 'Cambio generado exitosamente',
             'e': e.id
         }
 
-        return HttpResponse(json.dumps(data), content_type="application/json")
+        return redirect('games:me')
     else:
         user = get_object_or_404(User, username=request.user.username)
         context = {}
         response = {}
         exchangeObject = {}
         key = 0
-        for otherUser in UserAccount.objects.all():
-            for myGame in user.useraccount.games_owned.all():
-                if myGame in otherUser.games_wanted.all():
-                    for otherGame in otherUser.games_owned.all():
-                        if otherGame in user.useraccount.games_wanted.all():
-                            exchangeObject = {}
-                            exchangeObject['creator'] = user
-                            exchangeObject['guest'] = otherUser.user
-                            exchangeObject['creatorGame'] = myGame
-                            exchangeObject['guestGame'] = otherGame
 
-                            response[str(key)] = exchangeObject
-                            key += 1
+        for wanttrade in user.useraccount.trading_user.filter(type=True):
+            for trade in TradeOption.objects.filter(~Q(user=user.useraccount) & Q(type=False) & Q(game=wanttrade.game) & Q(platform=wanttrade.platform)):
+                for otherwant in trade.user.trading_user.filter(type=True):
+                    for offertrade in user.useraccount.trading_user.filter(Q(type=False) & Q(game=otherwant.game) & Q(platform=otherwant.platform)):
+                        exchangeObject = {}
+                        exchangeObject['creator'] = user
+                        exchangeObject['guest'] = otherwant.user.user
+                        exchangeObject['creatorGame'] = offertrade.game
+                        exchangeObject['creatorPlatform'] = offertrade.platform
+                        exchangeObject['guestGame'] = wanttrade.game
+                        exchangeObject['guestPlatform'] = wanttrade.platform
+
+                        response[str(key)] = exchangeObject
+                        key += 1
+
         if len(response) > 0:
             context["response"] = response
         else:
@@ -268,10 +327,11 @@ def exchange_view(request, exchange_id):
                         if state == 1 and exchange.accepted is True: #Cambio completado
                             creator = User.objects.get(pk=exchange.creator.user.id)
                             guest = User.objects.get(pk=exchange.guest.user.id)
-                            creator.useraccount.games_owned.remove(exchange.game_creator)
-                            creator.useraccount.games_wanted.remove(exchange.game_guest)
-                            guest.useraccount.games_owned.remove(exchange.game_guest)
-                            guest.useraccount.games_wanted.remove(exchange.game_creator)
+
+                            creator.useraccount.trading_user.filter(Q(game=exchange.game_creator) & Q(type=False)).delete()
+                            creator.useraccount.trading_user.filter(Q(game=exchange.game_guest) & Q(type=True)).delete()
+                            guest.useraccount.trading_user.filter(Q(game=exchange.game_guest) & Q(type=False)).delete()
+                            guest.useraccount.trading_user.filter(Q(game=exchange.game_creator) & Q(type=True)).delete()
 
                             #if exchange is completed, all pending exchanges that have
                             #the games from the completed exchange, will be terminated
@@ -319,21 +379,32 @@ def search_user(request):
         return render(request, 'games/user_search.html', {'users':usernames})
     return render(request, 'games/user_search.html')
 
+def remove_trade(request, trade_id):
+    if request.user.is_authenticated():
+        trade = get_object_or_404(TradeOption, pk=trade_id)
+        if trade.user == request.user.useraccount:
+            trade.delete()
+            return redirect('games:trade')
+        else:
+            return HttpResponseNotFound()
+    else:
+        return HttpResponseNotFound()
+
 def contact(request):
     if request.method == 'POST':
         message = request.POST.get("message")
         name = "Nombre: " + str(request.POST.get("name"))
-        email = "Correo: " + str(request.POST.get("email"))
+        mail = "Correo: " + str(request.POST.get("email"))
 
-        m = "\n".join([name, ' ', email, ' ', message])
+        m = "\n".join([name, ' ', mail, ' ', message])
 
-        send_mail('Mensaje enviado', m, 'soporte-gameranks@outlook.com',
-                  ['soporte-gameranks@outlook.com', str(request.POST.get("email"))], fail_silently=True)
+        email('Mensaje enviado', m, 'soporte-gameranks@outlook.com', mail)
+
         data = {
             'm': 'Mensaje enviado satisfactoriamente'
         }
 
-        return HttpResponse(json.dumps(data), content_type="application/json")
+        return render(request, 'games/contact.html', data)
     return render(request, 'games/contact.html')
 
 def about(request):

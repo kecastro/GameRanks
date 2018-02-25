@@ -90,24 +90,3 @@ class UserProfileForm(forms.ModelForm):
         model = UserAccount
         fields = ['gamer_id', 'picture', 'phone', 'city']
 
-
-class OwnedGamesForm(forms.ModelForm):
-    CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
-               Game.objects.all().order_by('name')]
-    games_owned = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder': 'Selecione los juego(s)', 'class': 'chosen-select mobile-multiselect'}))
-
-    class Meta:
-        model = UserAccount
-        fields = ['games_owned']
-
-
-class WantedGamesForm(forms.ModelForm):
-    CHOICES = [(game.id, str(game.name) + " - " + str(game.console.name)) for game in
-               Game.objects.all().order_by('name')]
-    games_wanted = forms.MultipleChoiceField(label="", choices=CHOICES, widget=forms.SelectMultiple(
-        attrs={'data-placeholder': 'Selecione los juego(s)', 'class': 'chosen-select mobile-multiselect'}))
-
-    class Meta:
-        model = UserAccount
-        fields = ['games_wanted']

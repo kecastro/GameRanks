@@ -32,10 +32,13 @@
                             <td>{{ value.guestGame}}</td>
                             <td>
                                 <form id="loading-form" method="post">
+                                    {% csrf_token %}
                                     <input id="creator" type="hidden" name="creator" value="{{ value.creator.id }}">
                                     <input id="guest" type="hidden" name="guest" value="{{ value.guest.id }}">
                                     <input id="creator_game" type="hidden" name="creator_game" value="{{ value.creatorGame.id }}">
+                                    <input id="creator_platform" type="hidden" name="creator_platform" value="{{ value.creatorPlatform }}">
                                     <input id="guest_game" type="hidden" name="guest_game" value="{{ value.guestGame.id }}">
+                                    <input id="guest_platform" type="hidden" name="guest_platform" value="{{ value.guestPlatform }}">
                                     <button id="submit-button" class="btn btn-success center-block" type="submit"><i class="fa fa-arrow-right"></i></button>
                                 </form>
                             </td>
@@ -44,13 +47,6 @@
                     </tbody>
                 </table>
             </div>
-            <div  id="results" style="text-align: center" class=" col-md-8 col-md-offset-2"></div>
         </div>
-        <div id='spinner' class='col-md-2 col-md-offset-5'></div>
     {% endif %}
-{% endblock %}
-
-{% block footer %}
-    <script src="{% static "games/js/spin.min.js" %}"></script>
-    <script src="{% static "games/js/loading.js" %}"></script>
 {% endblock %}

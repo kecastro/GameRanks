@@ -3,61 +3,34 @@
 {% load staticfiles %}
 
 {% block body %}
+    <body>
     <div class="col-md-10  col-md-offset-1">
-
-        <div style="padding-bottom: 5%;">
-        <!-- Slider de solo css -->
-        <article id="cc-slider">
-          <input checked="checked" name="cc-slider" id="slide1" type="radio">
-          <input name="cc-slider" id="slide2" type="radio">
-          <input name="cc-slider" id="slide3" type="radio">
-          <div id="cc-slides">
-            <div id="overflow">
-              <div class="inner">
-                <article>
-                  <img src="{% static "games/img/slide-1.jpg" %}"> </article>
-                <article>
-                  <img src="{% static "games/img/slide-2.jpg" %}"> </article>
-                <article>
-                  <img src="{% static "games/img/slide-3.jpg" %}"> </article>
-              </div>
-            </div>
-          </div>
-          <div id="controls">
-            <label for="slide1"></label>
-            <label for="slide2"></label>
-            <label for="slide3"></label>
-          </div>
-        </article>
-
-        </div>
 
         <div class="panel">
           <div class="panel-heading">
             <h3 class="panel-title" style="text-align: center">
-                Top 3 juegos <i class="fa fa-trophy" aria-hidden="true"></i>
+                Top 10 juegos de este año <i class="fa fa-trophy" aria-hidden="true"></i>
             </h3>
           </div>
           <table class="table table-striped  ">
               <thead>
               <tr>
                 <th>Juego</th>
-                <th>Consola</th>
-                <th style="text-align: center">Likes</th>
+                <th>Puntuación</th>
               </tr>
               </thead>
-              {% for game in  top_3_games %}
+              {% for game in  top_10_games %}
               <tbody>
               <tr>
-                <td>{{ game.name }}</td>
-                <td>{{ game.console.name }}</td>
-                <td style="text-align: center">{{ game.votes }}</td>
+                <td><a href="{% url 'games:game_view' game.id %}">{{ game.name }}</a></td>
+                  <td>{{ game.rating|floatformat }}</td>
               </tr>
               </tbody>
               {% endfor %}
           </table>
         </div>
     </div>
+    </body>
 {% endblock %}
 
 {% block footer %}

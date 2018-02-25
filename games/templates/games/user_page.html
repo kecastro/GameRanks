@@ -31,19 +31,21 @@
             <div class="jumbotron">
                 <h2 style="text-align: center;color:#02194f;">Juegos de {{ other_user.username }}</h2>
                 <div class="row">
-                    {% for game in other_user.useraccount.games_owned.all %}
-                        <div class="col-md-4">
-                            <a href="{% url 'games:game_view' game.id %}"><img class="game_cover_user"
-                                                                               src="{{ game.cover }}"></a>
-                        </div>
+                    {% for trade in other_user.useraccount.trading_user.all %}
+                        {% if trade.type == False %}
+                            <div class="col-md-4">
+                                <a href="{% url 'games:game_view' trade.game.id %}"><img class="game_cover_user" src="http://{{ trade.game.cover }}"></a>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
-{% block extra_js %}
+{% block footer %}
     <script src="{% static "games/js/user_search.js" %}"></script>
 {% endblock %}
+
 
 

@@ -7,6 +7,7 @@
           <div class="col-md-6 col-md-offset-3">
             <div class="well well-sm">
               <form id="loading-contact-form" class="form-horizontal" method="post">
+              {% csrf_token %}
                   <fieldset>
                     <legend class="text-center">Contactenos</legend>
 
@@ -56,11 +57,11 @@
           </div>
         </div>
     </div>
-    <div  id="results" style="text-align: center" class=" col-md-8 col-md-offset-2"></div>
-    <div id='spinner' class='col-md-2 col-md-offset-5'></div>
-{% endblock %}
-
-{% block footer %}
-    <script src="{% static "games/js/spin.min.js" %}"></script>
-    <script src="{% static "games/js/loading.js" %}"></script>
+    {% if m %}
+    <div  id="results" style="text-align: center" class=" col-md-8 col-md-offset-2">
+        <div class="alert alert-success">
+            <strong>Exito!</strong> Mensaje enviado satisfactoriamente.
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

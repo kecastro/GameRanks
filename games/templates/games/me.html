@@ -15,7 +15,9 @@
                     <button class="btn btn-default"><a href="{% url 'games:edit_me' %}"> Editar Perfil <i class="fa fa-edit"></i></a></button>
                     <h3>{{ me.first_name }}</h3>
 
-                    <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
+                    {% if me.useraccount.gamer_id != None %}
+                        <p><b>Gamertag:</b> {{ me.useraccount.gamer_id }}</p>
+                    {% endif %}
 
                     <form class="navbar-form" role="search">
                         <div class="input-group">
@@ -25,20 +27,6 @@
                             <span class="input-group-addon"><i class="fa fa-search"></i></span>
                         </div>
                     </form>
-
-                    <h5><a style="color:#02194f;" href="{% url 'games:trade' %}">Mis juegos</a></h5>
-                    {% for game in me.useraccount.games_owned.all %}
-                        <p style="font-size: 120%"><a style="color:black;"
-                                                      href="{% url 'games:game_view' game.id %}">{{ game.name }}
-                            - {{ game.console }}</a></p>
-                    {% endfor %}
-                    <h5><a style="color:#02194f;" href="{% url 'games:trade' %}">Juegos que busco</a></h5>
-                    {% for game in me.useraccount.games_wanted.all %}
-                        <p style="font-size: 120%"><a style="color:black;"
-                                                      href="{% url 'games:game_view' game.id %}">{{ game.name }}
-                            - {{ game.console }}</a></p>
-                    {% endfor %}
-
                 </div>
             </div>
             <div class="col-md-8">

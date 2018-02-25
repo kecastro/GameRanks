@@ -40,9 +40,6 @@
                     <li><a href="{% url 'games:index' %}">
                         <i class="fa fa-home" aria-hidden="true"></i> Inicio </a>
                     </li>
-                    <li><a href="{% url 'games:all_games' %}">
-                        <i class="fa fa-cubes" aria-hidden="true"></i> Juegos</a>
-                    </li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'games:trade' %}">
                             <i class="fa fa-exchange" aria-hidden="true"></i> Intercambio</a>

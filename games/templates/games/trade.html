@@ -2,12 +2,12 @@
 {% block title %}Oferta de juegos{% endblock %}
 {% load staticfiles %}
 {% block head %}
-    <link rel="stylesheet" href="{% static "games/css/chosen.min.css" %}">
-    <script src="{% static "games/js/chosen.jquery.min.js" %}"></script>
+    <script src="{% static "games/js/angular.min.js" %}"></script>
+    <script src="{% static "games/js/angular.js" %}"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="col-md-12">
+    <div ng-app="Trade" ng-controller="trade" class="col-md-12">
         {% if error_message %}
             <div class="container">
                 <div class="col-md-6 col-md-offset-3  alert alert-danger">
@@ -15,24 +15,95 @@
                 </div>
             </div>
         {% endif %}
-        <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" method="post">
-                {% csrf_token %}
-                <div class="form-group" style="text-align: center">
-                    <h4 style="color:#acdfb8;">Juego(s) a ofrecer</h4>
-                    {{ owned_form }}
-                    <h4 style="color:#acdfb8;">Juego(s) que quiero</h4>
-                    {{ wanted_form }}
+        <div class="col-md-8">
+            <div>
+                <form class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="input input-group col-md-12">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            <input ng-keyup="search()"  ng-model="myquery" class="form-control" placeholder="Buscar juego ...">
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-striped">
+                    <tbody ng-repeat="g in searchResult">
+                    <tr>
+                        {% verbatim %}<td>{{ g.name }}<a ng-click="add_trade(g.id, g.name, g.cover, g.platforms, false)"><i style="float: right;" class="fa fa-plus"></i></a></td>{% endverbatim %}
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="game_not_exist">
+                        <tr>
+                            <td style="text-align: center"><a href="{% url 'games:add_game' %}">No encuentras el juego? Agregalo <i class="fa fa-plus"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-show="malert" class="alert alert-warning">
+                    <strong>Alerta!</strong> {% verbatim %}{{ alert_message }}{% endverbatim %}
+                    <a ng-click="malert = false"><i style="float: right" class="fa fa-close"></i></a>
                 </div>
-                <button class="btn btn-success center-block" type="submit">
-                    Intercambiar <i class="fa fa-handshake-o" aria-hidden="true"></i>
-                </button>
-            </form>
+                <ul class="list-group">
+                    {% verbatim %}
+                    <li  ng-repeat="x in games_list" class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-4">{{ x.name }}</div>
+                            <div class="col-md-4 styled-select slate"> Consola:
+                                <select class="select-style" ng-model="selected_platform" ng-change="update_platform(selected_platform)">
+                                    <option value="{{ x.id }},{{ o }}" ng-repeat="o in x.opt">{{ o }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1"><em>Tengo</em></div>
+                            <div class="col-md-1">
+                                <label class="switch">
+                                    <input ng-model="type" ng-change="type_select(x.id, type)" type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="col-md-1"><em>Busco</em></div>
+                            <div class="col-md-1">
+                                <a ng-click="remove_game(x.id)"><i style="float: right; margin: auto;" class="fa fa-trash"></i></a>
+                            </div>
+                        </div>
+                     </li>
+                    {% endverbatim %}
+                </ul>
+            </div>
+            <div class="col-md-4 col-md-offset-4" style="padding-top: 2%; padding-bottom: 2%;">
+                <button ng-click="exchange()" class="btn btn-success center-block">Intercambiar</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Mis Juegos</div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for trade in user.useraccount.trading_user.all %}
+                            {% if trade.type == False %}
+                                <li class="list-group-item">
+                                    <a style="color:black;" href="{% url 'games:game_view' trade.game.id %}">{{ trade.game.name }} - {{ trade.platform }}</a>
+                                     <a href="{% url 'games:remove_trade' trade.id %}" ><i style="float: right; margin: auto;" class="fa fa-trash"></i></a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Juegos que busco</div>
+                <div class="panel-body">
+                   <ul class="list-group">
+                        {% for trade in user.useraccount.trading_user.all %}
+                            {% if trade.type == True %}
+                                <li class="list-group-item">
+                                    <a style="color:black;" href="{% url 'games:game_view' trade.game.id %}">{{ trade.game.name }} - {{ trade.platform }}</a>
+                                    <a href="{% url 'games:remove_trade' trade.id %}" ><i style="float: right; margin: auto;" class="fa fa-trash"></i></a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
 
-{% block footer %}
-    <script src="{% static "games/js/chosen.js" %}"></script>
-{% endblock %}

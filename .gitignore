@@ -29,9 +29,7 @@ __pycache__/
 django-env/
 .Python
 env/
-build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -66,15 +64,10 @@ coverage.xml
 *,cover
 .hypothesis/
 
-# Translations
-*.mo
-*.pot
-
 # Django
 *.log
 
 # Sphinx documentation
-docs/_build/
 
 # PyBuilder
 target/

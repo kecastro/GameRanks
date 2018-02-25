@@ -35,8 +35,9 @@
             {% if exchange.game_creator.cover == "None" %}
                 <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
             {% else %}
-                <img class="game_cover_exchange center-block" src="{{ exchange.game_creator.cover }}">
+                <img class="game_cover_exchange center-block" src="http://{{ exchange.game_creator.cover }}">
             {% endif %}
+            ({{ exchange.creator_platform}})
         </div>
         <div class="col-md-6">
             {% if exchange.guest.picture == "None" %}
@@ -61,10 +62,11 @@
             {% if exchange.game_guest.cover == "None" %}
                 <img class="game_cover_exchange center-block" src="{% static 'games/img/temp_cover.png' %}">
             {% else %}
-                <img class="game_cover_exchange center-block" src="{{ exchange.game_guest.cover }}">
+                <img class="game_cover_exchange center-block" src="http://{{ exchange.game_guest.cover }}">
             {% endif %}
+            ({{ exchange.guest_platform}})
         </div>
-        <div class="col-md-10 col-md-offset-1">
+        <div style="padding-top: 5%;" class="col-md-10 col-md-offset-1">
             <p>
             <b>Estatus:</b>
             {% if exchange.exchange_state == 0 %}

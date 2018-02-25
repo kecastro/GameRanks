@@ -4,7 +4,7 @@ $('#search-input-user').keyup(function (event) {
   if (query != '' || query != ' ') {
     $.ajax({
        type: 'GET',
-       url: '/games/searchuser/',
+       url: '/searchuser/',
        data: {'query': query },
        success: function(data) {
           $('#main-results-search-user').html(data);
