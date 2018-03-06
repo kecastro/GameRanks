@@ -30,7 +30,7 @@ class IndexView(ListView):
     template_name = 'games/index.html'
     context_object_name = 'top_10_games'
     best_games = Game.objects.order_by('-rating')
-    queryset = best_games.filter(release__year=2018)[:10]
+    queryset = best_games.filter(Q(release__year=2018) & Q(rating__gte=70))[:10]
 
 
 class GameView(DetailView):
